@@ -1,0 +1,83 @@
+addpath('../functions');
+
+%%
+
+conf = load('../06_regression_to_accuracy/auc_contra1.mat');
+
+% str_nicer = {'T_{in}^{con}','all','T_{in}^{con}, average','','','','','Cluster 1','Cluster 2','Cluster 3','Clusters 1 & 3','Clusters 1 & 3, average'};
+
+clear L
+
+
+
+L{1} = {'TinCluster1RT','TinCluster2RT','TinCluster3RT'};
+L{2} = {'TinCluster13AverageRT','TinRateRT','TinMeanRT'};
+% L{3} = {'TinMeanRT'};
+
+
+
+
+% L{1} = {'TinCluster1RT','TinCluster2RT','TinCluster3RT','TinCluster13RT'};
+% L{2} = {'TinCluster13AverageRT','TinRateRT','TinMeanRT'};
+
+% per session and average
+N = length(L);
+p = publish_plot(1,N);
+% set(gcf,'Position',[290  518  457  373]);
+set(gcf,'Position',[290  513  364  378]);
+p.shrink(1:N,0.8,0.6);
+p.displace_ax(1:N,0.15,2);
+p.displace_ax(1:N,0.15,1);
+
+
+for i=1:length(L)
+
+    p.next();
+    [ind, xc, mc, stdec, labels] = plot_auc_values(conf.auc_conf_all_ses, conf.auc_conf_all_ses_stde, L{i}, conf.str);
+    % [ind, xc, mc, stdec, labels] = plot_auc_values(conf.auc_conf_all_ses, conf.auc_conf_all_ses_stde, L, conf.str,'sort',1:3);
+
+end
+p.current_ax(1);
+ylabel('AUC confidence');
+
+same_xscale(p.h_ax);
+set(p.h_ax(2:N),'ycolor','none');
+
+% p.letter_the_plots();
+set(p.h_ax,'ylim',[0.55,0.75]);
+p.format('FontSize',14,'MarkerSize',9,'LineWidthPlot',1,'LineWidthAxes',1);
+set(gca,'ytick',0.55:0.05:0.75);
+drawnow
+xtickangle(45);
+
+
+set(p.h_ax(1),'xticklabel',{'Cluster 1','Cluster 2','Cluster 3'});
+set(p.h_ax(2),'xticklabel',{'\langle Clust. 1&3 \rangle','TinCon','\langle TinCon \rangle'})
+
+
+[x_fig1,y_fig1] = ax2fig(p.h_ax(1),1,0.75);
+[x_fig2,~] = ax2fig(p.h_ax(1),3,0.75);
+annotation('line',[x_fig1, x_fig2],[y_fig,y_fig] + 0.05);
+annotation('line',[x_fig1, x_fig1],[y_fig,y_fig-0.02] + 0.05);
+annotation('line',[x_fig2, x_fig2],[y_fig,y_fig-0.02] + 0.05);
+
+
+
+
+
+% p.append_to_pdf('fig_auc_per_cluster',1,1);
+
+
+
+%% stats
+% ind = [find(ismember(conf.str,'TinCluster1RT')),...
+%     find(ismember(conf.str,'TinCluster2RT')),...
+%     find(ismember(conf.str,'TinCluster3RT'))];
+% 
+% conf.auc_conf_all_ses(ind(1))
+% conf.auc_conf_all_ses_stde(ind(1))
+
+
+
+
+
