@@ -2,15 +2,11 @@ addpath('../generic/');
 
 
 %%
-load ../data_prepro/LIP_data_concat/data_Tin_with_H.mat
+load('../data_prepro/LIP_data_concat/data_Tin_with_H.mat','t','H','RT','coh_extra','correct');
 
 %%
 [p, av] = fn_plot_PSTH(t,H,RT,coh_extra,correct);
 
-p.current_ax(2);
-h = area([-0.15,-0.05],[30,30]);set(h,'FaceColor',0.7*[1,1,1],'EdgeColor','none');
-
 set(p.h_ax,'ylim',[5,30]);
 
 p.append_to_pdf('fig_PSTH',1,1);
-% saveas(gcf,'fig_PSTH');
